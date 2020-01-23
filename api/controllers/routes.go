@@ -8,8 +8,8 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/users/{id}", s.DeleteUser).Methods("DELETE")
 
 	//Posts routes
-	s.Router.HandleFunc("/posts", s.CreatePost).Methods("POST")
-	s.Router.HandleFunc("/posts", s.GetPosts).Methods("GET")
+	s.Router.HandleFunc("/posts", s.createPost).Methods("POST")
+	s.Router.HandleFunc("/posts", s.GetPost).Methods("GET")
 	s.Router.HandleFunc("/posts/{id}", s.GetPost).Methods("GET")
 	s.Router.HandleFunc("/posts/{id}", s.UpdatePost).Methods("PUT")
 	s.Router.HandleFunc("/posts/{id}", s.DeletePost).Methods("DELETE")

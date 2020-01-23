@@ -15,7 +15,7 @@ type Server struct {
 	Router *mux.Router
 }
 
-func (server *Server) Initalize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, DbName string) {
+func (server *Server) Initalize(Dbdriver, DbUser, DbPassword, DbHost, DbName string, Port int) {
 	var err error
 	if Dbdriver == "postgres" {
 		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", DbHost, DbPort, DbUser, DbName, DbPassword)

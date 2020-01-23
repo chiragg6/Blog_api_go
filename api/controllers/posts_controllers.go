@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 
@@ -71,36 +72,38 @@ func (server *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 	var err error
 	vars := mux.Vars(r)
 	id := vars["id"]
+	value, _ := strconv.ParseUint(id, 10, 64)
 
 	post := models.Post{}
-	PostFound, err := post.FindPostByID(server.DB, id)
+	PostFound, err := post.FindPostByID(server.DB, value)
 	if err != nil {
 		panic(err)
 	}
 
-	responses.JSON(w, http.StatusOK, postRecieved)
+	responses.JSON(w, http.StatusOK, PostFound)
 }
 
 func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	id := vars["id"]
+	pid, _ := strconv.ParseUint(id, 10, 64)
 
 	post := models.Post{}
 
 	//check if the post exits
-	err := server.DB.Debug().Model(models.Post{}).Where("id = ?", id).Take(&post).Error
+	err := server.DB.Debug().Model(models.Post{}).Where("id = ?", pid).Take(&post).Error
 	if err != nil {
 		// panic(err)
 		fmt.Println("Post Not Found", err)
 		return
 	}
 
-	if id != post.AuthorID {
-		fmt.Println("not authorised user")
-		return
+	// if id != post.AuthorID {
+	// 	fmt.Println("not authorised user")
+	// 	return
 
-	}
+	// }
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -137,6 +140,7 @@ func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 func (server *Server) DeletePost(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
+	pid, _ := strconv.ParseUint(id, 10, 64)
 
 	post := models.Post{}
 	//Check if the post exits
@@ -146,11 +150,11 @@ func (server *Server) DeletePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if id != post.AuthorID {
-		fmt.Println("U not legitimate user")
-		return
-	}
-	_, err := post.DeleteAPost(server.DB, pid)
+	// if id != post.AuthorID {
+	// 	fmt.Println("U not legitimate user")
+	// 	return
+	// }
+	_, err = post.DeleteAPost(server.DB, pid)
 	if err != nil {
 		panic(err)
 		return

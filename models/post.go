@@ -109,7 +109,7 @@ func (p *Post) UpdateAPost(db *gorm.DB) (*Post, error) {
 
 func (p *Post) DeleteAPost(db *gorm.DB, pid uint64) (int64, error) {
 
-	db = db.Debug().Model(&Post{}).Where("id = ? and author_id = ?", pid, uid).Take(&Post{}).Delete(&Post{})
+	db = db.Debug().Model(&Post{}).Where("id = ? and author_id = ?", pid).Take(&Post{}).Delete(&Post{})
 
 	if db.Error != nil {
 		if gorm.IsRecordNotFoundError(db.Error) {

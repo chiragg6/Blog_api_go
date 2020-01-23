@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/crud_api/api/responses"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+
+	"github.com/crud_api/api/responses"
+	"github.com/gorilla/mux"
 
 	"github.com/crud_api/models"
 )
@@ -22,22 +24,21 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 		return
 	}
-
-	user.Preapare() 
+	user.Preapare()
 	err = user.Validate("")
 	if err != nil {
 		panic(err)
 		return
 	}
 
-	userCreated, err := user.SaveUser(server.DB)
+	_, err = user.SaveUser(server.DB)
 
 	if err != nil {
 		panic(err)
 		return
 	}
 
-	// w.Header().Set()	
+	// w.Header().Set()
 }
 
 func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
@@ -53,53 +54,57 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
+	value, _ := strconv.ParseUint(id, 10, 64)
 
 	user := models.User{}
-	UserDetail, err := user.FindUserByID(server.DB, id)
+	UserDetail, err := user.FindUserByID(server.DB, value)
 	if err != nil {
 		panic(err)
 	}
-	responses.JSON(W, http.StatusOK, UserDetail)
+	responses.JSON(w, http.StatusOK, UserDetail)
 }
 
 func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	uid := vars["id"]
-	body , err := ioutil.ReadAll(r.Body)
+	id, err := strconv.ParseUint(uid, 10, 64)
+	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		// responses.JSON(w, http.StatusUnprocessableEntity, err)
-		panic(errs)
-		return 
+		panic(err)
+		return
 	}
 
-	user := model.User{}
+	user := models.User{}
 	err = json.Unmarshal(body, &user)
-	if err != nil  {
+	if err != nil {
 		// responses.ERROR
 		panic(err)
 	}
 
-	user.Prepare()
+	// user.Preapare()
+	user.Preapare()
 	err = user.Validate("update")
 	if err != nil {
 		panic(err)
 	}
-	updatedUser, err := user.UpdateAUser(server.DB, uid)
+	updatedUser, err := user.UpdateAUser(server.DB, id)
 	if err != nil {
 		panic(err)
 		return
 	}
-	responses.JSON(W, http.StatusOK, updatedUser)
+	responses.JSON(w, http.StatusOK, updatedUser)
 }
 
 func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	id := vars["id"]
+	pid, _ := strconv.ParseUint(id, 10, 64)
 
 	user := models.User{}
-	err := user.DeleteAUser(sever.DB, id)
+	_, err := user.DeleteAUser(server.DB, pid)
 	if err != nil {
 		panic(err)
 		return
