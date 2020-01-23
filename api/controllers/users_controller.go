@@ -91,8 +91,18 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(W, http.StatusOK, updatedUser)
+}
 
+func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
 
+	id := vars["id"]
 
-
+	user := models.User{}
+	err := user.DeleteAUser(sever.DB, id)
+	if err != nil {
+		panic(err)
+		return
+	}
+	responses.JSON(w, http.StatusNoContent, "")
 }
