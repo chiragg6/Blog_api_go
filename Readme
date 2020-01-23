@@ -12,3 +12,7 @@ Tech Stack for application
 
 GO, GORM , JWT, Postgres, Gorilla MUX
 
+Main is the Binary, we have used postgres database
+
+
+
