@@ -47,6 +47,20 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, users)
+}
 
+func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
 
+	user := models.User{}
+	UserDetail, err := user.FindUserByID(server.DB, id)
+	if err != nil {
+		panic(err)
+	}
+	responses.JSON(W, http.StatusOK, UserDetail)
+}
+
+func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	
 }
