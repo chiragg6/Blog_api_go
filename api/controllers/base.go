@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"log"
+	"net/http"
 
 	"github.com/crud_api/models"
 	"github.com/gorilla/mux"
@@ -29,4 +30,11 @@ func (server *Server) Initalize(Dbdriver, DbUser, DbPassword, DbPort, DbHost, Db
 
 	server.DB.Debug().AutoMigrate(&models.User{}, &models.Post{})
 	//Database Migration
+	server.Router = mux.NewRouter()
+	server.initializeRoutes()
+}
+
+func (server *Server) Run(addr string) {
+	fmt.Println("Listening to Port 8080")
+	log.Fatal(http.ListenAndServe(addr, server.Router))
 }
