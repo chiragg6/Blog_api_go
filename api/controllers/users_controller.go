@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/gorilla/mux"
 	"github.com/crud_api/api/responses"
 	"encoding/json"
 	"io/ioutil"
@@ -62,5 +63,36 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	
+	vars := mux.Vars(r)
+
+	uid := vars["id"]
+	body , err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		// responses.JSON(w, http.StatusUnprocessableEntity, err)
+		panic(errs)
+		return 
+	}
+
+	user := model.User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil  {
+		// responses.ERROR
+		panic(err)
+	}
+
+	user.Prepare()
+	err = user.Validate("update")
+	if err != nil {
+		panic(err)
+	}
+	updatedUser, err := user.UpdateAUser(server.DB, uid)
+	if err != nil {
+		panic(err)
+		return
+	}
+	responses.JSON(W, http.StatusOK, updatedUser)
+
+
+
+
 }

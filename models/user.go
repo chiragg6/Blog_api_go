@@ -136,7 +136,7 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	return u, err
 }
 
-func (u *User) UpdateAllUser(db *gorm.DB, uid uint32) (*User, error) {
+func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 	err := u.BeforeSave()
 	if err != nil {
 		log.Fatal(err)
