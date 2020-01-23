@@ -133,3 +133,28 @@ func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 	responses.JSON(w, http.StatusOK, UpdatedPost)
 }
+
+func (server *Server) DeletePost(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	post := models.Post{}
+	//Check if the post exits
+	err := server.DB.Debug().Model(models.Post{}).Where("if = ?", id).Take(&post).Error
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	if id != post.AuthorID {
+		fmt.Println("U not legitimate user")
+		return
+	}
+	_, err := post.DeleteAPost(server.DB, pid)
+	if err != nil {
+		panic(err)
+		return
+	}
+	responses.JSON(w, http.StatusNoContent, "")
+
+}
