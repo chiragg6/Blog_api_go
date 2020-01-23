@@ -8,3 +8,7 @@ View all blog posts
 view a particular blog post
 delete blog post created by him
 
+Tech Stack for application
+
+GO, GORM , JWT, Postgres, Gorilla MUX
+
