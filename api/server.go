@@ -18,7 +18,7 @@ var server = controllers.Server{}
 
 func Run() {
 
-	var err error
+	// var err error
 
 	// err := godotenv.Load()
 	// if err != nil {
@@ -28,7 +28,7 @@ func Run() {
 	// 	fmt.Println("We are getting the env values")
 
 	// }
-	server.Initalize(Host, User, Dbname, Password, Sslmode, Port)
+	server.Initalize()
 
 	seed.Load(server.DB)
 	server.Run(":8080")
